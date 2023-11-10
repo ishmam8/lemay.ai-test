@@ -1,0 +1,55 @@
+#Open terminal bash
+#Install kubectl 
+sudo apt-get update && sudo apt-get install -y kubectl
+
+#connect and configure with DigitalOcean
+brew install doctl
+doctl auth init
+doctl kubernetes cluster kubeconfig save <your-cluster-name>
+
+#verify the connection
+kubectl get nodes
+
+#Build K8s cluster for kafka and zooker
+#create deployment and service yaml files, coimbined in one file for each app
+/kafka-deployment.yaml & /zookeeper-deployment.yaml
+#deploy
+kubectl apply -f zookeeper-deployment.yaml
+kubectl apply -f kafka-deployment.yaml
+
+#Build K8s cluster for neo4j and elasticsearch
+#create deplyment and service in one yaml file for each app
+/neo4j-deployment.yaml & /elasticsearch-deploy.yaml
+#deploy
+kubectl apply -f neo4j-deployment.yaml
+kubectl apply -f elasticsearch-deploy.yaml
+
+#dockerize the producer and consumer app 
+#connect with a container registry (dockerhub)
+docker build --no-cache --pull --force-rm -t producer .
+docker build --no-cache --pull --force-rm -t consumer .
+#push to dockerhub
+docker images
+#producer 
+docker tag [IMAGEID] username/producer
+docker push username/producer
+#producer 
+docker tag [IMAGEID] username/consumer
+docker push username/consumer
+
+#Build K8s cluster for producer and consumer
+#make sure the container image in the producer and consumer yaml file
+#matches the dockerhub container name (i.e., username/<image>)
+#deploy
+#the clusters can be set as loadbalancer to be accessible from external web
+kubectl apply -f producer.yaml
+kubectl apply -f consumer.yaml
+-------------------------------------------------------------------------------
+
+#debug issues with kubectl pods, servicesm, logs and events
+kubectl get pods
+kubectl get svc 
+kubectl logs pod-name
+kubectl describe pod pod-name
+
+
