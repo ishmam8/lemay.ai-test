@@ -1,5 +1,5 @@
 # lemay.ai-test
-Self-contained little example data pipeline project by Lemay.ai
+Self-contained little example data pipeline project by Lemay.ai.
 The answers to question 1-8 can be found inside "answers-ss.ai" folder
 
 ## Kubernetes conversion from docker-compose, DockerHub
